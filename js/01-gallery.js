@@ -58,3 +58,4 @@ function closeModal(event) {
     document.removeEventListener("keydown", closeModal);
   }
 }
+console.log(galleryItems);
