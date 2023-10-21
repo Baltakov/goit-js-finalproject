@@ -33,22 +33,35 @@ gallery.addEventListener("click", openOriginalIMG);
 let modalOpen = false;
 // instance хранит ссылку на объект модального окна
 let instance;
-//функция openOriginalIMG() принимает объект события щелчка в качестве
-//входных данных и открывает модальное окно с оригинальным изображением в нем.
+
+// Функция openOriginalIMG() открывает модальное окно с оригинальным изображением.
 function openOriginalIMG(e) {
   e.preventDefault();
-  //получаем ссылку на элемент .gallery__link, на который нажал пользователь.
+
   const imgOriginal = e.target.closest(".gallery__link");
-  //создаем новый экземпляр объекта модального окна basicLightbox
-  instance = basicLightbox.create(`
+
+  // Используем объект настроек для добавления слушателя клавиатуры при открытии модального окна.
+  instance = basicLightbox.create(
+    `
     <img src="${imgOriginal.getAttribute("href")}" width="800" height="600">
-  `);
+  `,
+    {
+      onShow: () => {
+        modalOpen = true;
+        // Добавляем обработчик события "keydown" к документу при открытии модального окна.
+        document.addEventListener("keydown", closeModal);
+      },
+      onClose: () => {
+        modalOpen = false;
+        // Убираем обработчик события "keydown" с документа при закрытии модального окна.
+        document.removeEventListener("keydown", closeModal);
+      },
+    }
+  );
 
   instance.show();
-  modalOpen = true;
-  //добавляем обработчик события "keydown" к документу.
-  document.addEventListener("keydown", closeModal);
 }
+
 //функци closeModal() принимает объект события клавиатуры в качестве
 //входных данных и закрывает модальное окно.
 function closeModal(event) {
